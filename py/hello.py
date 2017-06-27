@@ -1,5 +1,7 @@
-from flask import Flask, request, url_for, render_template
+from flask import Flask, request, url_for, render_template, escape, redirect, session
 app = Flask(__name__)
+# set the secret key.  keep this really secret:
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 #url_for('static', filename='style.css')
 
 @app.route('/hello') # route tells Flask what URL should trigger our function
@@ -8,8 +10,43 @@ def hello_world():
 
 
 @app.route('/')
-def index_hello():
-	return render_template('index.html');
+def index():
+	#return render_template('index.html');
+   if 'username' in session:
+      username = session['username']
+      return 'Logged in as ' + username + '<br>' + \
+      "<b><a href = '/logout'>click here to log out</a></b>"
+   return "You are not logged in <br><a href = '/login'></b>" + \
+      "click here to log in</b></a>"
+
+
+@app.route('/login', methods = ['GET', 'POST'])
+def login():
+   if request.method == 'POST':
+      session['username'] = request.form['username']
+      return redirect(url_for('index'))
+   return '''
+	
+   <form action = "" method = "post">
+      <p><input type = text name = 'username' /></p>
+      <p><input type = submit value = 'Login' /></p>
+   </form> 
+	'''
+
+@app.route('/logout')
+def logout():
+   # remove the username from the session if it is there
+   session.pop('username', None)
+   return redirect(url_for('index'))
+
+
+@app.route('/sessiontest')
+def sessiontest():
+	session['username'] = 'caro';
+	return session['username'];
+    #if 'username' in session:
+    #    return 'Logged in as %s' % escape(session['username'])
+    #return 'You are not logged in'
 	
 
 @app.route('/user/<username>') # visit e.g. http://[...]/user/caro to see Hello caro
@@ -18,19 +55,3 @@ def show_user_profile(username):
     return 'Hello %s' % username
 
 
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-    error = None
-    if request.method == 'POST':
-        if valid_login(request.form['username'],
-                       request.form['password']):
-            return log_the_user_in(request.form['username'])
-        else:
-            error = 'Invalid username/password'
-    # the code below is executed if the request method
-    # was GET or the credentials were invalid
-    return render_template('login.html', error=error)
-
-
-
-# http://flask.pocoo.org/docs/0.12/quickstart/#quickstart  -  the request object
