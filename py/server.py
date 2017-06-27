@@ -14,20 +14,14 @@ def hello_world():
 @app.route('/')
 def index():
 	#return render_template('index.html');
-	if 'username' in session and 'ip' in session and 'date' in session and 'cpu' in session and 'gpu' in session and 'ram' in session:
+	if 'username' in session and 'ip' in session and 'date' in session:
 		username = session['username']
 		ip = session['ip']
 		date = session['date']
 		date_string = date.strftime('%d.%m.%Y %H:%M:%S')
-		cpu = session['cpu']
-		gpu = session['gpu']
-		ram = session['ram']
 		return 'Logged in as ' + username + '<br>' + \
 		'IP: ' + ip + '<br>' + \
 		'Date: ' + date_string + '<br>' + \
-		'CPU: ' + cpu + '<br>' + \
-		'GPU: ' + gpu + '<br>' + \
-		'RAM: ' + ram + '<br>' + \
 		"<b><a href = '/logout'>click here to log out</a></b>"
 	return "You are not logged in <br><a href = '/login'></b>" + \
 	"click here to log in</b></a>"
@@ -41,9 +35,7 @@ def login():
 		session['ip'] = request.environ['REMOTE_ADDR']
 		session['date'] = datetime.now()
 		# info contains CPU, GPU, RAM, ...		
-		session['cpu'] = request.form['cpu']
-		session['gpu'] = request.form['gpu']
-		session['ram'] = request.form['ram']
+		#session['info'] =
 		return redirect(url_for('index'))
 	return render_template('login.html')
 	#return '''
