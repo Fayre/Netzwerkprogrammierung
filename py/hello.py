@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for
+from flask import Flask, request, url_for, render_template
 app = Flask(__name__)
 #url_for('static', filename='style.css')
 
@@ -9,8 +9,8 @@ def hello_world():
 
 @app.route('/')
 def index_hello():
-	return "Hello Index!"
-
+	return render_template('index.html');
+	
 
 @app.route('/user/<username>') # visit e.g. http://[...]/user/caro to see Hello caro
 def show_user_profile(username):
