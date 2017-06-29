@@ -14,14 +14,20 @@ def hello_world():
 @app.route('/')
 def index():
 	#return render_template('index.html');
-	if 'username' in session and 'ip' in session and 'date' in session:
+	if 'username' in session and 'ip' in session and 'date' in session and 'info' in session:
 		username = session['username']
 		ip = session['ip']
 		date = session['date']
 		date_string = date.strftime('%d.%m.%Y %H:%M:%S')
+		cpu = session['info'][0]
+		gpu = session['info'][1]
+		ram = session['info'][2]
 		return 'Logged in as ' + username + '<br>' + \
 		'IP: ' + ip + '<br>' + \
 		'Date: ' + date_string + '<br>' + \
+		'CPU: ' + cpu + '<br>' + \
+		'GPU: ' + gpu + '<br>' + \
+		'RAM: ' + ram + '<br>' + \
 		"<b><a href = '/logout'>click here to log out</a></b>"
 	return "You are not logged in <br><a href = '/login'></b>" + \
 	"click here to log in</b></a>"
@@ -34,17 +40,15 @@ def login():
 		#session['ip'] = jsonify({'ip': request.remote_addr}), 200
 		session['ip'] = request.environ['REMOTE_ADDR']
 		session['date'] = datetime.now()
-		# info contains CPU, GPU, RAM, ...		
-		#session['info'] =
+		# info contains CPU, GPU, RAM, ...
+		info = [0,1,2]
+		info[0] = request.form['cpu']
+		info[1] = request.form['gpu']
+		info[2] = request.form['ram']
+		session['info'] = info
 		return redirect(url_for('index'))
 	return render_template('login.html')
-	#return '''
-	
-	#<form action = "" method = "post">
-   #   <p><input type = text name = 'username' /></p>
-   #   <p><input type = submit value = 'Login' /></p>
-	#</form> 
-	#'''
+
 
 @app.route('/logout')
 def logout():
