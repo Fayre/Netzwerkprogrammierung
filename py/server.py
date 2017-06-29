@@ -17,30 +17,36 @@ def hello_world():
 @app.route('/')
 def index():
 	#return render_template('index.html');
-	if 'username' in session and 'ip' in session and 'date' in session and 'info' in session:
+	if 'username' in session and 'ip' in session and 'date' in session:
 		# get system info
+		name = platform.uname()[1]
 		processor = platform.processor()
-		memory = psutil.virtual_memory()
+		os = platform.platform()
+		memory = psutil.virtual_memory()[1] /1000000000.0 # because return value is in byte
+
+		info = [name, processor, os, memory]
+		session['info'] = info
 
 		# get session data
 		username = session['username']
 		ip = session['ip']
 		date = session['date']
 		date_string = date.strftime('%d.%m.%Y %H:%M:%S')
-		cpu = session['info'][0]
-		gpu = session['info'][1]
-		ram = session['info'][2]
 		return 'Logged in as ' + username + '<br>' + \
+		'PC Name: ' + name + '<br>' + \
 		'IP: ' + ip + '<br>' + \
 		'Date: ' + date_string + '<br>' + \
-		'CPU: ' + cpu + '<br>' + \
-		'GPU: ' + gpu + '<br>' + \
-		'RAM: ' + ram + '<br>' + \
 		'Processor: ' + processor + '<br>' + \
-		'Total Memory: ' + str(memory[1]) + '<br>' + \
+		'Total Memory: ' + str(memory) + 'GB<br>' + \
+		'Operating System: ' + os + '<br>' + \
 		"<b><a href = '/logout'>click here to log out</a></b>"
 	return "You are not logged in <br><a href = '/login'></b>" + \
 	"click here to log in</b></a>"
+
+
+def get_available_gpus():
+    local_device_protos = device_lib.list_local_devices()
+    return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -50,11 +56,11 @@ def login():
 		session['ip'] = request.environ['REMOTE_ADDR']
 		session['date'] = datetime.now()
 		# info contains CPU, GPU, RAM, ...
-		info = [0,1,2]
-		info[0] = request.form['cpu']
-		info[1] = request.form['gpu']
-		info[2] = request.form['ram']
-		session['info'] = info
+		#info = [0,1,2]
+		#info[0] = request.form['cpu']
+		#info[1] = request.form['gpu']
+		#info[2] = request.form['ram']
+		#session['info'] = info
 		return redirect(url_for('index'))
 	return render_template('login.html')
 
