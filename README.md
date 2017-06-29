@@ -1,3 +1,9 @@
 # Netzwerkprogrammierung
 
-Insert how to install and use this project.
+To start the server: 
+$ export FLASK_APP=hello.py
+$ python -m flask run
+
+
+To start a client:
+navigate to localhost in Webbrowser
