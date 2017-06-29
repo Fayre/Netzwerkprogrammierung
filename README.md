@@ -1,5 +1,9 @@
 # Netzwerkprogrammierung
 
+Needed packages:
+* psutil 
+
+
 To start the server: 
 * navigate to server.py 
 * $ export FLASK_APP=server.py 
