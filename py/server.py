@@ -2,7 +2,6 @@ from flask import Flask, request, url_for, render_template, escape, redirect, se
 from datetime import datetime
 import platform
 import psutil
-#import pkg_resources
 
 app = Flask(__name__)
 # set the secret key.  keep this really secret:
@@ -17,17 +16,16 @@ def hello_world():
 
 @app.route('/')
 def index():
-	#return render_template('index.html');
 	if 'username' in session and 'ip' in session and 'date' in session:
 		# get system info
 		name = platform.uname()[1]
 		processor = platform.processor()
-		os = platform.platform()
+		#os = platform.platform()
+		os = request.user_agent.platform
 		memory = psutil.virtual_memory()[1] /1000000000.0 # because return value is in byte
 		memory_str = str(memory)
-		#version = pkg_resources.get_distribution('firefox').version
 		
-		info = [name, processor, os, memory]
+		info = [processor, memory]
 		session['info'] = info
 
 		# get session data
@@ -35,6 +33,7 @@ def index():
 		ip = session['ip']
 		date = session['date']
 		date_string = date.strftime('%d.%m.%Y %H:%M:%S')
+
 		return render_template('home.html', username=username, name=name, ip=ip, date_string=date_string, processor=processor, memory=memory_str, os=os)
 	return "You are not logged in <br><a href = '/login'></b>" + \
 	"click here to log in</b></a>"
@@ -43,6 +42,18 @@ def index():
 def get_available_gpus():
     local_device_protos = device_lib.list_local_devices()
     return [x.name for x in local_device_protos if x.device_type == 'GPU']
+
+@app.route('/update')
+def update():
+	if 'username' in session and 'ip' in session and 'date' in session:
+		browser = request.user_agent.browser
+		version = request.user_agent.version and int(request.user_agent.version.split('.')[0])
+		#platform = request.user_agent.platform
+		uas = request.user_agent.string
+
+		return render_template('update.html', browser=browser, version=version, uas=uas)
+	return "You are not logged in <br><a href = '/login'></b>" + \
+	"click here to log in</b></a>"
 
 
 @app.route('/login', methods = ['GET', 'POST'])
