@@ -2,6 +2,7 @@ from flask import Flask, request, url_for, render_template, escape, redirect, se
 from datetime import datetime
 import platform
 import psutil
+#import pkg_resources
 
 app = Flask(__name__)
 # set the secret key.  keep this really secret:
@@ -23,7 +24,9 @@ def index():
 		processor = platform.processor()
 		os = platform.platform()
 		memory = psutil.virtual_memory()[1] /1000000000.0 # because return value is in byte
-
+		memory_str = str(memory)
+		#version = pkg_resources.get_distribution('firefox').version
+		
 		info = [name, processor, os, memory]
 		session['info'] = info
 
@@ -32,14 +35,7 @@ def index():
 		ip = session['ip']
 		date = session['date']
 		date_string = date.strftime('%d.%m.%Y %H:%M:%S')
-		return 'Logged in as ' + username + '<br>' + \
-		'PC Name: ' + name + '<br>' + \
-		'IP: ' + ip + '<br>' + \
-		'Date: ' + date_string + '<br>' + \
-		'Processor: ' + processor + '<br>' + \
-		'Total Memory: ' + str(memory) + 'GB<br>' + \
-		'Operating System: ' + os + '<br>' + \
-		"<b><a href = '/logout'>click here to log out</a></b>"
+		return render_template('home.html', username=username, name=name, ip=ip, date_string=date_string, processor=processor, memory=memory_str, os=os)
 	return "You are not logged in <br><a href = '/login'></b>" + \
 	"click here to log in</b></a>"
 
