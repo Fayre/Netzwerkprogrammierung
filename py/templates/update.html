@@ -4,11 +4,22 @@
 	<title>Updateprogramm - Update</title>
 </head> 
 <body>
-	<div>
-		checking for updates... <br>
-		Browser: {{browser}} <br>
-		Version: {{version}} <br>
-		UAS: {{uas}} <br>
-	</div>
+	<form action="" method="POST">
+		<div>
+			{{ current_state }} <br>
+			Browser: {{browser}} <br>
+			Version: {{version}} <br>
+			UAS: {{uas}} <br>
+		</div>
+		<div>
+			{% if version < 55 %}
+				<hr>
+				Update available
+				<input type = submit value = 'Ok, update' />
+			{% else %}
+				You are up to date
+			{% endif %}
+		</div>
+	</form>
 </body> 
 </html>

@@ -43,7 +43,7 @@ def get_available_gpus():
     local_device_protos = device_lib.list_local_devices()
     return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
-@app.route('/update')
+@app.route('/update', methods = ['GET', 'POST'])
 def update():
 	if 'username' in session and 'ip' in session and 'date' in session:
 		browser = request.user_agent.browser
@@ -51,7 +51,10 @@ def update():
 		#platform = request.user_agent.platform
 		uas = request.user_agent.string
 
-		return render_template('update.html', browser=browser, version=version, uas=uas)
+		if request.method == 'POST':
+			return render_template('update.html', current_state="updating...", browser=browser, version=version, uas=uas)
+
+		return render_template('update.html', current_state="checking for updates...", browser=browser, version=version, uas=uas)
 	return "You are not logged in <br><a href = '/login'></b>" + \
 	"click here to log in</b></a>"
 
