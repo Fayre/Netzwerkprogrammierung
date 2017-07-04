@@ -12,3 +12,7 @@ To start the server:
 
 To start a client:
 * navigate to localhost in Webbrowser
+
+
+For testing on openstack:
+* ssh -i /homes/chainke/Netzwerkprogrammierung/Repo/updateprogram.pem ubuntu@194.94.18.66

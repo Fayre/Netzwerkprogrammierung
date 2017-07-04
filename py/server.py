@@ -2,17 +2,12 @@ from flask import Flask, request, url_for, render_template, escape, redirect, se
 from datetime import datetime
 import platform
 import psutil
+import subprocess
 
 app = Flask(__name__)
 # set the secret key.  keep this really secret:
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 #url_for('static', filename='style.css')
-
-@app.route('/hello') # route tells Flask what URL should trigger our function
-def hello_world():
-    #return 'Hello, World!' # message we want to display in the users browser
-	return render_template('index.html')
-
 
 @app.route('/')
 def index():
@@ -24,7 +19,9 @@ def index():
 		os = request.user_agent.platform
 		memory = psutil.virtual_memory()[1] /1000000000.0 # because return value is in byte
 		memory_str = str(memory)
-		
+		#gpu = get_available_gpus()		
+
+		# info contains CPU, GPU, RAM, ...
 		info = [processor, memory]
 		session['info'] = info
 
@@ -43,18 +40,20 @@ def get_available_gpus():
     local_device_protos = device_lib.list_local_devices()
     return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
+
 @app.route('/update', methods = ['GET', 'POST'])
 def update():
 	if 'username' in session and 'ip' in session and 'date' in session:
 		browser = request.user_agent.browser
 		version = request.user_agent.version and int(request.user_agent.version.split('.')[0])
-		#platform = request.user_agent.platform
 		uas = request.user_agent.string
+		prog_version = get_version("firefox")
 
 		if request.method == 'POST':
-			return render_template('update.html', current_state="updating...", browser=browser, version=version, uas=uas)
+			# update button pressed
+			return render_template('update.html', current_state="updating...", browser=browser, version=version, uas=uas, prog_version=prog_version)
 
-		return render_template('update.html', current_state="checking for updates...", browser=browser, version=version, uas=uas)
+		return render_template('update.html', current_state="checking for updates...", browser=browser, version=version, uas=uas, prog_version=prog_version)
 	return "You are not logged in <br><a href = '/login'></b>" + \
 	"click here to log in</b></a>"
 
@@ -65,25 +64,34 @@ def login():
 		session['username'] = request.form['username']
 		session['ip'] = request.environ['REMOTE_ADDR']
 		session['date'] = datetime.now()
-		# info contains CPU, GPU, RAM, ...
-		#info = [0,1,2]
-		#info[0] = request.form['cpu']
-		#info[1] = request.form['gpu']
-		#info[2] = request.form['ram']
-		#session['info'] = info
+		
 		return redirect(url_for('index'))
 	return render_template('login.html')
 
 
 @app.route('/logout')
 def logout():
-   # remove the username from the session if it is there
-   session.pop('username', None)
-   session.pop('ip', None)
-   return redirect(url_for('index'))
+	# remove data from the session if it is there
+	session.pop('username', None)
+	session.pop('ip', None)
+	session.pop('info', None)
+	session.pop('date', None)
+	return redirect(url_for('index'))
 
 
+def get_version(program):
+	cmd = [program, "-version"]
+	p = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
+	out, err = p.communicate()
+	return out
 
+
+@app.route('/test')
+def test():
+	cmd = ["firefox", "-version"]
+	p = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
+	out, err = p.communicate()
+	return out
 
 
 #@app.route('/hardware_test')
