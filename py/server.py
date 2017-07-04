@@ -51,6 +51,7 @@ def update():
 
 		if request.method == 'POST':
 			# update button pressed
+			run_update("firefox")
 			return render_template('update.html', current_state="updating...", browser=browser, version=version, uas=uas, prog_version=prog_version)
 
 		return render_template('update.html', current_state="checking for updates...", browser=browser, version=version, uas=uas, prog_version=prog_version)
@@ -81,6 +82,12 @@ def logout():
 
 def get_version(program):
 	cmd = [program, "-version"]
+	p = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
+	out, err = p.communicate()
+	return out
+
+def run_update(program):
+	cmd = ["sudo", "apt-get", "update", "sudo", "apt-get", "install", program]
 	p = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
 	out, err = p.communicate()
 	return out
