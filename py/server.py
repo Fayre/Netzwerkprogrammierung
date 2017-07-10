@@ -1,8 +1,11 @@
+from __future__ import print_function
 from flask import Flask, request, url_for, render_template, escape, redirect, session, jsonify
 from datetime import datetime
 import platform
 import psutil
 import subprocess
+import sys
+
 
 app = Flask(__name__)
 # set the secret key.  keep this really secret:
@@ -35,7 +38,7 @@ def index():
 	return "You are not logged in <br><a href = '/login'></b>" + \
 	"click here to log in</b></a>"
 
-
+# not working yet
 def get_available_gpus():
     local_device_protos = device_lib.list_local_devices()
     return [x.name for x in local_device_protos if x.device_type == 'GPU']
@@ -47,14 +50,19 @@ def update():
 		browser = request.user_agent.browser
 		version = request.user_agent.version and int(request.user_agent.version.split('.')[0])
 		uas = request.user_agent.string
-		prog_version = get_version("firefox")
+		
+		program_to_check = "firefox"
+		prog_version = get_version(program_to_check)
+		
+		# check if update is available
+		update_is_available = check_for_update(program_to_check, prog_version)
 
 		if request.method == 'POST':
 			# update button pressed
-			run_update("firefox")
-			return render_template('update.html', current_state="updating...", browser=browser, version=version, uas=uas, prog_version=prog_version)
+			run_update(program_to_check)
+			return render_template('update.html', current_state="update complete!", browser=browser, version=version, uas=uas, prog_version=prog_version, update_is_available=update_is_available)
 
-		return render_template('update.html', current_state="checking for updates...", browser=browser, version=version, uas=uas, prog_version=prog_version)
+		return render_template('update.html', current_state="checking for updates...", browser=browser, version=version, uas=uas, prog_version=prog_version, update_is_available=update_is_available)
 	return "You are not logged in <br><a href = '/login'></b>" + \
 	"click here to log in</b></a>"
 
@@ -85,6 +93,16 @@ def get_version(program):
 	p = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
 	out, err = p.communicate()
 	return out
+
+# return 0 for false: no update
+# return 1 for true: update available
+def check_for_update(program, prog_version):
+	has_update = 0;
+	# python does not support switch case...
+	#print(prog_version, file=sys.stderr)
+	if program == "firefox" and prog_version != "Mozilla Firefox 55.0\n":
+		has_update = 1
+	return has_update
 
 def run_update(program):
 	cmd = ["sudo", "apt-get", "update", "sudo", "apt-get", "install", program]
