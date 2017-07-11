@@ -1,0 +1,10 @@
+{
+  "firefox": {
+    "version": "54.0.1",
+    "url": "packages/firefox"
+  },
+  "telegram": {
+    "version": "1.0.27",
+    "url": "packages/telegram"
+  }
+}

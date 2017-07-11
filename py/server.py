@@ -1,10 +1,11 @@
 from __future__ import print_function
-from flask import Flask, request, url_for, render_template, escape, redirect, session, jsonify
+from flask import Flask, request, url_for, render_template, escape, redirect, session, jsonify, send_file
 from datetime import datetime
 import platform
 import psutil
 import subprocess
 import sys
+import json
 
 
 app = Flask(__name__)
@@ -55,16 +56,35 @@ def update():
 		prog_version = get_version(program_to_check)
 		
 		# check if update is available
-		update_is_available = check_for_update(program_to_check, prog_version)
+		update_is_available = check_for_update(program_to_check, "54.0.0")
 
 		if request.method == 'POST':
 			# update button pressed
-			run_update(program_to_check)
+			#run_update(program_to_check)
 			return render_template('update.html', current_state="update complete!", browser=browser, version=version, uas=uas, prog_version=prog_version, update_is_available=update_is_available)
 
-		return render_template('update.html', current_state="checking for updates...", browser=browser, version=version, uas=uas, prog_version=prog_version, update_is_available=update_is_available)
+		return render_template('update.html', current_state="check for updates", browser=browser, version=version, uas=uas, prog_version=prog_version, update_is_available=update_is_available)
 	return "You are not logged in <br><a href = '/login'></b>" + \
 	"click here to log in</b></a>"
+
+
+# return 0 for false: no update
+# return 1 for true: update available
+def check_for_update(program, prog_version):
+
+	with open('packages.json') as json_string:
+		json_obj = json.load(json_string);
+
+	if program == "firefox" and prog_version == json_obj["firefox"]["version"]:
+		return 0
+	return 1
+
+@app.route('/download_update')
+def run_update():
+	try:
+		return send_file('packages/firefox/firefox-54.0.1.tar.bz2', attachment_filename='firefox-54.0.1.tar.bz2')
+	except Exception as e:
+		return str(e)
 
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -90,22 +110,6 @@ def logout():
 
 def get_version(program):
 	cmd = [program, "-version"]
-	p = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
-	out, err = p.communicate()
-	return out
-
-# return 0 for false: no update
-# return 1 for true: update available
-def check_for_update(program, prog_version):
-	has_update = 0;
-	# python does not support switch case...
-	#print(prog_version, file=sys.stderr)
-	if program == "firefox" and prog_version != "Mozilla Firefox 55.0\n":
-		has_update = 1
-	return has_update
-
-def run_update(program):
-	cmd = ["sudo", "apt-get", "update", "sudo", "apt-get", "install", program]
 	p = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
 	out, err = p.communicate()
 	return out
