@@ -4,7 +4,7 @@
 	<title>Updateprogramm - Update</title>
 </head> 
 <body>
-	<form action="" method="POST">
+	<form action="/download_update" method="GET">
 		<div>
 			{{ current_state }} <br>
 			Browser: {{browser}} <br>
@@ -15,9 +15,8 @@
 		<div>
 			{% if update_is_available == 1 %}
 				<hr>
-				Update available
-				<input type = submit value = 'Ok, update' />
-				<a href="/download_update" target="blank">download</a>
+				Updates available: 
+				<input type = submit name = 'update' value = 'Firefox'/>
 			{% else %}
 				You are up to date
 			{% endif %}

@@ -79,10 +79,12 @@ def check_for_update(program, prog_version):
 		return 0
 	return 1
 
-@app.route('/download_update')
+@app.route('/download_update', methods = ['GET', 'POST'])
 def run_update():
+	prog_to_update = request.form['update']
 	try:
-		return send_file('packages/firefox/firefox-54.0.1.tar.bz2', attachment_filename='firefox-54.0.1.tar.bz2')
+		if prot_to_update == "Firefox":
+			return send_file('packages/firefox/firefox-54.0.1.tar.bz2', attachment_filename='firefox-54.0.1.tar.bz2')
 	except Exception as e:
 		return str(e)
 
