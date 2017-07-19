@@ -57,14 +57,15 @@ def update():
 		prog_version = get_version(program_to_check)
 		
 		# check if update is available
-		update_is_available = check_for_update(program_to_check, "54.0.0")
+		#update_is_available = check_for_update(program_to_check, "54.0.0")
+		update_is_available = check_for_update(program_to_check, prog_version)
 
 		if request.method == 'POST':
 			# update button pressed
 			#run_update(program_to_check)
-			return render_template('update.html', current_state="update complete!", browser=browser, version=version, uas=uas, prog_version=prog_version, update_is_available=update_is_available)
+			return render_template('update.html', current_state="update complete!", browser=browser, version=version, uas=uas, prog_version=prog_version, update_is_available=update_is_available, program=program_to_check)
 
-		return render_template('update.html', current_state="check for updates", browser=browser, version=version, uas=uas, prog_version=prog_version, update_is_available=update_is_available)
+		return render_template('update.html', current_state="check for updates", browser=browser, version=version, uas=uas, prog_version=prog_version, update_is_available=update_is_available, program=program_to_check)
 	return "You are not logged in <br><a href = '/login'></b>" + \
 	"click here to log in</b></a>"
 
@@ -76,7 +77,8 @@ def check_for_update(program, prog_version):
 	with open('packages.json') as json_string:
 		json_obj = json.load(json_string);
 
-	if program == "firefox" and prog_version == json_obj["firefox"]["version"]:
+	#if program == "firefox" and prog_version == json_obj["firefox"]["version"]:
+	if prog_version == json_obj[program]["version"]:
 		return 0
 	return 1
 
@@ -116,10 +118,13 @@ def logout():
 
 
 def get_version(program):
-	cmd = [program, "-version"]
-	p = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
-	out, err = p.communicate()
-	return out
+	try:
+		cmd = [program, "-version"]
+		p = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
+		out, err = p.communicate()
+		return out
+	except Exception as e:
+		return 0
 
 
 @app.route('/test')
