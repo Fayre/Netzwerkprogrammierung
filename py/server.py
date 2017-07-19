@@ -11,7 +11,8 @@ import json
 app = Flask(__name__)
 # set the secret key.  keep this really secret:
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-#url_for('static', filename='style.css')
+#refuses connection of other clients. Errno 111
+#app.run(threaded=True)
 
 @app.route('/')
 def index():
@@ -81,9 +82,13 @@ def check_for_update(program, prog_version):
 
 @app.route('/download_update', methods = ['GET', 'POST'])
 def run_update():
-	prog_to_update = request.form['update']
+	
+	prog_to_update = request.form["update"]
+	test = request.form.get('update', None)
+	print('Hello world!', file=sys.stderr)
+	print(test, file=sys.stderr)
 	try:
-		if prot_to_update == "Firefox":
+		if prog_to_update == "Firefox":
 			return send_file('packages/firefox/firefox-54.0.1.tar.bz2', attachment_filename='firefox-54.0.1.tar.bz2')
 	except Exception as e:
 		return str(e)
