@@ -126,7 +126,8 @@ def test():
 @app.route('/hello_world', methods = ['POST'])
 def hello_world():
 	#return request.form['data']
-	return "Hello World!"
+	data = request.form['name']
+	return data
 
 
 #@app.route('/hardware_test')
