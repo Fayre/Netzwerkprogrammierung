@@ -2,7 +2,7 @@ from __future__ import print_function
 from flask import Flask, request, url_for, render_template, escape, redirect, session, jsonify, send_file
 from datetime import datetime
 import platform
-import psutil
+#import psutil
 import subprocess
 import sys
 import json
@@ -21,7 +21,8 @@ def index():
 		processor = platform.processor()
 		#os = platform.platform()
 		os = request.user_agent.platform
-		memory = psutil.virtual_memory()[1] /1000000000.0 # because return value is in byte
+		#memory = psutil.virtual_memory()[1] /1000000000.0 # because return value is in byte
+		memory = 100;
 		memory_str = str(memory)
 		#gpu = get_available_gpus()		
 
@@ -121,6 +122,11 @@ def test():
 	p = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
 	out, err = p.communicate()
 	return out
+	
+@app.route('/hello_world', methods = ['POST'])
+def hello_world():
+	#return request.form['data']
+	return "Hello World!"
 
 
 #@app.route('/hardware_test')
