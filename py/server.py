@@ -127,8 +127,14 @@ def test():
 def hello_world():
 	#return request.form['data']
 	data = request.form['name']
-	return data
+	return "access granted"
 
+@app.route('/start_connection', methods = ['POST'])
+def start_connection():
+	print (request.form['ram'])
+	session['ip'] = request.remote_addr
+	print (session['ip'])
+	return 'hello ' + request.form['name']
 
 #@app.route('/hardware_test')
 #def hardware_test():
