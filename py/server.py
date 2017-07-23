@@ -1,17 +1,24 @@
+#!/usr/bin/env python3
+
 from __future__ import print_function
-from flask import Flask, request, url_for, render_template, escape, redirect, session, jsonify, send_file
+from flask import Flask, request, url_for, render_template, escape, redirect, session, jsonify, send_file, send_from_directory
 from datetime import datetime
 import platform
 #import psutil
 import subprocess
 import sys
 import json
+import requests
+import zipfile
 
 
 app = Flask(__name__)
 # set the secret key.  keep this really secret:
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-#url_for('static', filename='style.css')
+#SESSION_TYPE = 'redis'
+#app.config.from_object(__name__)
+#Session(app)
+#app.run(host='0.0.0.0')
 
 @app.route('/')
 def index():
@@ -123,34 +130,44 @@ def test():
 	out, err = p.communicate()
 	return out
 	
+#---------------------------------------------------------------------
+
 @app.route('/hello_world', methods = ['POST'])
 def hello_world():
 	#return request.form['data']
 	data = request.form['name']
 	return "access granted"
 
+
 @app.route('/start_connection', methods = ['POST'])
 def start_connection():
-	print (request.form['ram'])
+	# setup data
+	session['name'] = request.form['name']
+	session['date'] = request.form['date']
 	session['ip'] = request.remote_addr
-	print (session['ip'])
-	return 'hello ' + request.form['name']
-
-#@app.route('/hardware_test')
-#def hardware_test():
-#	try:
-#		cpu_genric_info = cpu_generic_details()
-#	except Exception as ex:
-#		print ex
-#	finally:
-#		return render_template("hardware_test_index.html", title="hardware_test_index", cpu_generic_info = cpu_generic_info)
-
-#def cpu_generic_details():
-#	try:
-#		items = [s.split('\t: ') for s in subprocess.check_output(["cat /proc/cpuinfo | grep 'model name\|Hardware\|Serial' | uniq "], shell=True).splitlines()]
-#	except Exception as ex:   
-#		print ex
-#	finally:
-#		return items
+	session['processor'] = request.form['processor']
+	session['ram'] = request.form['ram']
+	session['platform'] = request.form['platform']
+	session['program'] = request.form['program']
+	session['version'] = request.form['version']
+	#print (session['version'])
+	#return 'access granted!\nhello ' + request.form['name']
+	return (check_for_update())
 
 
+# return 0 for false: no update
+# return 1 for true: update available
+#@app.route('/check_for_update', methods = ['POST'])
+def check_for_update():
+	with open('packages.json') as json_string:
+		json_obj = json.load(json_string);
+
+	if session['version'] == json_obj[session['program']]['version']:
+		return "no update"
+	else :
+		return (get_update())
+
+def get_update():
+	with open('packages/firefox/hallu.zip', 'rb') as f:
+		my_file = f.read()
+	return my_file
