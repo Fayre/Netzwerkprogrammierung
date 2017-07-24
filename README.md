@@ -1,7 +1,11 @@
 # Netzwerkprogrammierung
 
+A server-client connection to check if a newer version of a program is available, download it and extract the .zip file.
+
 Needed packages:
-* psutil 
+* requests
+* psutil
+* zipfile 
 
 
 To start the server: 
@@ -11,8 +15,5 @@ To start the server:
 
 
 To start a client:
-* navigate to localhost in Webbrowser
+* start client.py from console
 
-
-For testing on openstack:
-* ssh -i /homes/chainke/Netzwerkprogrammierung/Repo/updateprogram.pem ubuntu@194.94.18.66
