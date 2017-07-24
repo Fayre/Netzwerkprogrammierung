@@ -33,19 +33,19 @@ except (FileNotFoundError):
 
 # send client data to server for first heartbeat
 client_data = {"processor":platform.processor(), "platform":platform.platform(), "ram":(psutil.virtual_memory()[0])/1000000000, "name":platform.uname()[1], "date":datetime.now(), "program":program, "version":out}
-print ("checking for update for " + program)
+print ("searching for update for " + program)
 connection_return = requests.post(server_ip + "start_connection", data = client_data)
 
-if(connection_return.text == 'no update available for this software'):
+if(connection_return.text == 'no update available for this software.' or connection_return.text == 'software is up to date.'):
 	print (connection_return.text)
 else:
-	print ('downloading update...')
+	print ('update found.')
+	print ('saving...')
 
 	recieved_file = open(program + '.zip','wb') 
 	recieved_file.write(connection_return.content)
 	recieved_file.close() 
 
-	print ('successfully downloaded update')
 	print ('extracting update...')
 
 	downloaded_zip = zipfile.ZipFile(program + '.zip')

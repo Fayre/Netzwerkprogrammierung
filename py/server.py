@@ -43,10 +43,10 @@ def check_for_update():
 		json_obj = json.load(json_string);
 
 	if session['program'] not in json_obj:
-		return 'no update available for this software'
+		return 'no update available for this software.'
 
 	if session['version'] == json_obj[session['program']]['version']:
-		return 'no update available for this software'
+		return 'software is up to date.'
 	else :
 		return (get_update())
 
