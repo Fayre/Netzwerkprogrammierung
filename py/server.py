@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+This is the server for the server-client-update-application.
+If a client connects to this server, it checks for an update of the required software and if found, streams it to the client.
+"""
 
 from __future__ import print_function
 from flask import Flask, request, session
@@ -6,10 +10,6 @@ from datetime import datetime
 import platform
 import json
 
-"""
-This is the server for the server-client-update-application.
-If a client connects to this server, it checks for an update of the required software and if found, streams it to the client.
-"""
 
 app = Flask(__name__)
 # set the secret key.  keep this really secret:

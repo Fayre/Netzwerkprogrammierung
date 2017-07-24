@@ -1,0 +1,48 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module server</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>server</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/media/caro/7B363EB1337606AC/Users/Caro/Documents/Uni/Semester6/Netzwerkprogrammierung/Netzwerkprogrammierung/py/server.py">/media/caro/7B363EB1337606AC/Users/Caro/Documents/Uni/Semester6/Netzwerkprogrammierung/Netzwerkprogrammierung/py/server.py</a></font></td></tr></table>
+    <p><tt>This&nbsp;is&nbsp;the&nbsp;server&nbsp;for&nbsp;the&nbsp;server-client-update-application.<br>
+If&nbsp;a&nbsp;client&nbsp;connects&nbsp;to&nbsp;this&nbsp;server,&nbsp;it&nbsp;checks&nbsp;for&nbsp;an&nbsp;update&nbsp;of&nbsp;the&nbsp;required&nbsp;software&nbsp;and&nbsp;if&nbsp;found,&nbsp;streams&nbsp;it&nbsp;to&nbsp;the&nbsp;client.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="json.html">json</a><br>
+</td><td width="25%" valign=top><a href="platform.html">platform</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-check_for_update"><strong>check_for_update</strong></a>()</dt><dd><tt>Compares&nbsp;the&nbsp;current&nbsp;version&nbsp;of&nbsp;the&nbsp;program&nbsp;with&nbsp;the&nbsp;one&nbsp;stored&nbsp;on&nbsp;the&nbsp;server.<br>
+Loads&nbsp;the&nbsp;data&nbsp;of&nbsp;the&nbsp;updates&nbsp;stored&nbsp;on&nbsp;the&nbsp;server&nbsp;as&nbsp;json&nbsp;string&nbsp;and&nbsp;compares&nbsp;it.&nbsp;If&nbsp;update&nbsp;is&nbsp;available,&nbsp;starts&nbsp;downloading&nbsp;it.</tt></dd></dl>
+ <dl><dt><a name="-get_update"><strong>get_update</strong></a>()</dt><dd><tt>Searches&nbsp;for&nbsp;update&nbsp;package.<br>
+If&nbsp;found,&nbsp;stream&nbsp;it&nbsp;as&nbsp;binary&nbsp;to&nbsp;the&nbsp;client.</tt></dd></dl>
+ <dl><dt><a name="-start_connection"><strong>start_connection</strong></a>()</dt><dd><tt>Starts&nbsp;the&nbsp;connection&nbsp;of&nbsp;server&nbsp;and&nbsp;client.<br>
+In&nbsp;order&nbsp;to&nbsp;do&nbsp;so,&nbsp;stores&nbsp;everything&nbsp;in&nbsp;the&nbsp;session&nbsp;object.&nbsp;Starts&nbsp;the&nbsp;checking&nbsp;for&nbsp;update&nbsp;afterwards.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>app</strong> = &lt;Flask 'server'&gt;<br>
+<strong>print_function</strong> = _Feature((2, 6, 0, 'alpha', 2), (3, 0, 0, 'alpha', 0), 65536)<br>
+<strong>request</strong> = &lt;LocalProxy unbound&gt;<br>
+<strong>session</strong> = &lt;LocalProxy unbound&gt;</td></tr></table>
+</body></html>
