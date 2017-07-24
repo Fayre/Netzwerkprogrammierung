@@ -46,7 +46,7 @@ def check_for_update():
 		return 'no update available for this software'
 
 	if session['version'] == json_obj[session['program']]['version']:
-		return "no update"
+		return 'no update available for this software'
 	else :
 		return (get_update())
 

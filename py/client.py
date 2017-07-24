@@ -16,14 +16,14 @@ It asks for the program to check and then starts a connection by sending all nec
 
 server_ip = 'http://127.0.0.1:5000/'
 
-program = 'telegram'
+program = sys.argv[1]
 
 # get version of program you want to update
 try:
 	cmd = [program, "-version"]
 	p = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
 	out, err = p.communicate()
-except FileNotFoundError:
+except (FileNotFoundError):
 	out = "0"
 
 # send client data to server for first heartbeat
@@ -45,3 +45,5 @@ else:
 
 	downloaded_zip = zipfile.ZipFile(program + '.zip')
 	zipfile.ZipFile.extractall(downloaded_zip)
+
+	print ('done - successfully downloaded update.')
