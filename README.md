@@ -15,5 +15,5 @@ To start the server:
 
 
 To start a client:
-* start client.py from console
+* start client.py [name of software you want to update] from console
 
