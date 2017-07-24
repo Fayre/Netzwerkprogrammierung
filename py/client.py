@@ -9,6 +9,11 @@ import psutil
 import zipfile
 from datetime import datetime
 
+"""
+This is the client for the server-client-update-application. 
+It asks for the program to check and then starts a connection by sending all neccessary data to the server.
+"""
+
 server_ip = 'http://127.0.0.1:5000/'
 
 program = 'telegram'
