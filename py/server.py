@@ -150,24 +150,25 @@ def start_connection():
 	session['platform'] = request.form['platform']
 	session['program'] = request.form['program']
 	session['version'] = request.form['version']
-	#print (session['version'])
-	#return 'access granted!\nhello ' + request.form['name']
 	return (check_for_update())
 
 
 # return 0 for false: no update
 # return 1 for true: update available
-#@app.route('/check_for_update', methods = ['POST'])
 def check_for_update():
 	with open('packages.json') as json_string:
 		json_obj = json.load(json_string);
+
+	if session['program'] not in json_obj:
+		return 'no update available for this software'
 
 	if session['version'] == json_obj[session['program']]['version']:
 		return "no update"
 	else :
 		return (get_update())
 
+# searches for the update package
 def get_update():
-	with open('packages/firefox/hallu.zip', 'rb') as f:
+	with open('packages/' + session['program'] + '/' + session['program'] + '.zip', 'rb') as f:
 		my_file = f.read()
 	return my_file
