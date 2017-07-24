@@ -32,12 +32,12 @@ if(connection_return.text == 'no update available for this software'):
 else:
 	print ('downloading update...')
 
-	#zipfile.ZipFile.write('responsedata.zip', '')
-
 	recieved_file = open(program + '.zip','wb') 
-	 
 	recieved_file.write(connection_return.content)
-	 
 	recieved_file.close() 
 
 	print ('successfully downloaded update')
+	print ('extracting update...')
+
+	downloaded_zip = zipfile.ZipFile(program + '.zip')
+	zipfile.ZipFile.extractall(downloaded_zip)
