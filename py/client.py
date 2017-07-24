@@ -7,7 +7,6 @@ import subprocess
 import platform
 import psutil
 import zipfile
-#from flask import Flask, request
 from datetime import datetime
 
 server_ip = 'http://127.0.0.1:5000/'
